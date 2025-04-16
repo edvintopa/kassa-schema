@@ -4,6 +4,7 @@ export interface ScheduleRow {
   shiftStart: string;
   shiftEnd: string;
   totalBrakeTime: number;
+  breaks?: Break[]; // Add this line to allow breaks property
 }
 
 export interface Break {
