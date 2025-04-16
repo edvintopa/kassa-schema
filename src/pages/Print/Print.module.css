@@ -1,0 +1,128 @@
+/* Base styles for screen view */
+.printContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    color: black;
+    font-family: Arial, sans-serif;
+}
+
+.printTitle {
+    font-size: 24pt;
+    text-align: center;
+    margin-bottom: 20pt;
+}
+
+.printTable {
+    margin-bottom: 30pt;
+}
+
+.printTable h2 {
+    font-size: 16pt;
+    margin-bottom: 10pt;
+}
+
+/* Loading state */
+.printLoading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 20px;
+}
+
+/* Table styles */
+.table {
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    margin-bottom: 20pt;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ddd;
+    padding: 6pt;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Compact table style */
+.compactTable {
+    composes: table;
+    margin-bottom: 15pt;
+}
+
+.compactTable th,
+.compactTable td {
+    padding: 4pt;
+    line-height: 1.2;
+}
+
+/* Two-column layout */
+.twoColumnLayout {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.column {
+    flex: 1;
+}
+
+.column .table,
+.column .compactTable {
+    width: 90%;
+}
+
+/* Print button */
+.printButton {
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.printButton:hover {
+    background-color: #2563eb;
+}
+
+/* Print-specific overrides */
+@media print {
+    @page {
+        size: A4;
+        margin: 1cm;
+    }
+    
+    /* Remove styles from body that might affect other pages */
+    .printContainer {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .twoColumnLayout {
+        display: flex;
+        break-inside: avoid;
+    }
+    
+    .column .table,
+    .column .compactTable {
+        width: 95%;
+    }
+    
+    .printButton {
+        display: none !important;
+    }
+}

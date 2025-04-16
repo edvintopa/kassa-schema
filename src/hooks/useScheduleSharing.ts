@@ -33,6 +33,16 @@ export function useScheduleSharing({ schedule, breaks }: UseScheduleSharingProps
     const encodedSchedule = encodeURIComponent(JSON.stringify(scheduleWithBreaks));
     return `${baseUrl}${schedulePath}?schedule=${encodedSchedule}`;
   };
+  
+  // New function to generate print URL
+  const generatePrintUrl = () => {
+    const baseUrl = window.location.origin;
+    // Use the print path
+    const schedulePath = '/kassa-schema/#/print'; 
+    const scheduleWithBreaks = generateScheduleWithBreaks();
+    const encodedSchedule = encodeURIComponent(JSON.stringify(scheduleWithBreaks));
+    return `${baseUrl}${schedulePath}?schedule=${encodedSchedule}`;
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generateLiveUrl());
@@ -43,6 +53,7 @@ export function useScheduleSharing({ schedule, breaks }: UseScheduleSharingProps
   return {
     copied,
     generateLiveUrl,
+    generatePrintUrl, // Export the new function
     copyToClipboard
   };
 }
