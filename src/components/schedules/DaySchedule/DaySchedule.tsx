@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ScheduleRow } from '../../../types';
 import { useScheduleEditor } from '../../../hooks/useScheduleEditor';
 
@@ -19,10 +19,45 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
     handleCancel
   } = useScheduleEditor({ schedule, setSchedule });
 
+  // Ref for the name input field
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  // Focus the name field when a new row is opened for editing
+  useEffect(() => {
+    if (editingId && nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [editingId]);
+
+  // Listen for global Enter key when nothing is selected and no input is focused
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === 'Enter' &&
+        !editingId &&
+        document.activeElement?.tagName !== 'INPUT'
+      ) {
+        e.preventDefault();
+        handleAddRow();
+      }
+    };
+
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    return () => document.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [editingId, handleAddRow]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    }
+  };
+
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm dark:shadow-neutral-700 border border-neutral-200 dark:border-neutral-700">
-      <div className="flex justify-between items-center p-5 border-b dark:border-neutral-700">
-        <h2 className="text-lg font-medium text-neutral-800 dark:text-neutral-100">Schema</h2>
+    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700">
+      <div className="flex justify-between items-center p-4 border-b dark:border-neutral-700">
+        <h2 className="text-xl font-semibold text-neutral-800 dark:text-neutral-100">
+          Schema
+        </h2>
         <button 
           onClick={handleAddRow}
           className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-700 text-blue-500 dark:text-blue-400 transition-colors"
@@ -35,42 +70,44 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
       </div>
       
       <div className="overflow-x-auto">
-        <table className="w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+        <table className="w-full divide-y divide-neutral-200 dark:divide-neutral-600">
           <thead>
-            <tr className="bg-neutral-50 dark:bg-neutral-750">
-              <th scope="col" className="w-1/4 px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+            <tr className="bg-neutral-100 dark:bg-neutral-800">
+              <th scope="col" className="w-1/4 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
                 Namn
               </th>
-              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
                 Start
               </th>
-              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
                 Stop
               </th>
-              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
                 Rast
               </th>
-              <th scope="col" className="w-1/6 px-5 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-5 py-3 text-right text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
                 Åtgärder
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
+          <tbody className="divide-y divide-neutral-200 dark:divide-neutral-600">
             {schedule.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-5 py-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
-                  Inget schema än. Klicka på + för att lägga till...
+                <td colSpan={5} className="px-5 py-8 text-center text-sm text-neutral-600 dark:text-neutral-300">
+                  Inget schema än. Klicka på + eller tryck <span className='font-bold'>ENTER</span> för att fortsätta...
                 </td>
               </tr>
             ) : (
               schedule.map((row) => (
-                <tr key={row.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-750 transition-colors">
+                <tr key={row.id} className="hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors">
                   <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
+                        ref={nameInputRef}
                         type="text"
                         value={editData?.name || ''}
                         onChange={(e) => handleInputChange('name', e.target.value)}
+                        onKeyDown={handleKeyDown}
                         className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       />
                     ) : (
@@ -88,6 +125,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                         type="text"
                         value={editData?.shiftStart || ''}
                         onChange={(e) => handleInputChange('shiftStart', e.target.value)}
+                        onKeyDown={handleKeyDown}
                         className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                         placeholder="HH:MM"
                       />
@@ -106,6 +144,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                         type="text"
                         value={editData?.shiftEnd || ''}
                         onChange={(e) => handleInputChange('shiftEnd', e.target.value)}
+                        onKeyDown={handleKeyDown}
                         className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                         placeholder="HH:MM"
                       />
