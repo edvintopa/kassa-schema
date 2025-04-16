@@ -20,12 +20,12 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
   } = useScheduleEditor({ schedule, setSchedule });
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <div className="flex justify-between items-center p-4 border-b">
-        <h2 className="text-xl font-semibold text-gray-800">Schema</h2>
+    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700">
+      <div className="flex justify-between items-center p-4 border-b dark:border-neutral-700">
+        <h2 className="text-xl font-semibold text-neutral-800 dark:text-neutral-100">Schema</h2>
         <button 
           onClick={handleAddRow}
-          className="p-2 rounded-full hover:bg-gray-100 text-blue-600"
+          className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 text-blue-600 dark:text-blue-400"
           aria-label="Add row"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -35,47 +35,47 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
       </div>
       
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+          <thead className="bg-neutral-50 dark:bg-neutral-700">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Namn
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Start
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Stop
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Rast
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Åtgärder
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700">
             {schedule.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
+                <td colSpan={5} className="px-6 py-4 text-center text-sm text-neutral-500 dark:text-neutral-400">
                   Inget schema än. Tryck på + för att fortsätta...
                 </td>
               </tr>
             ) : (
               schedule.map((row) => (
-                <tr key={row.id}>
+                <tr key={row.id} className="dark:hover:bg-neutral-750">
                   <td className="px-6 py-4 whitespace-nowrap">
                     {editingId === row.id ? (
                       <input
                         type="text"
                         value={editData?.name || ''}
                         onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="border rounded px-2 py-1 w-full"
+                        className="border dark:border-neutral-600 rounded px-2 py-1 w-full dark:bg-neutral-700 dark:text-neutral-100"
                       />
                     ) : (
                       <div 
-                        className="text-sm text-gray-900 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded"
+                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.name || '—'}
@@ -88,12 +88,12 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                         type="text"
                         value={editData?.shiftStart || ''}
                         onChange={(e) => handleInputChange('shiftStart', e.target.value)}
-                        className="border rounded px-2 py-1 w-full"
+                        className="border dark:border-neutral-600 rounded px-2 py-1 w-full dark:bg-neutral-700 dark:text-neutral-100"
                         placeholder="HH:MM"
                       />
                     ) : (
                       <div 
-                        className="text-sm text-gray-900 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded"
+                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.shiftStart || '—'}
@@ -106,12 +106,12 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                         type="text"
                         value={editData?.shiftEnd || ''}
                         onChange={(e) => handleInputChange('shiftEnd', e.target.value)}
-                        className="border rounded px-2 py-1 w-full"
+                        className="border dark:border-neutral-600 rounded px-2 py-1 w-full dark:bg-neutral-700 dark:text-neutral-100"
                         placeholder="HH:MM"
                       />
                     ) : (
                       <div 
-                        className="text-sm text-gray-900 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded"
+                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.shiftEnd || '—'}
@@ -124,11 +124,11 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                         type="number"
                         value={editData?.totalBrakeTime || 0}
                         onChange={(e) => handleInputChange('totalBrakeTime', parseInt(e.target.value) || 0)}
-                        className="border rounded px-2 py-1 w-full"
+                        className="border dark:border-neutral-600 rounded px-2 py-1 w-full dark:bg-neutral-700 dark:text-neutral-100"
                       />
                     ) : (
                       <div 
-                        className="text-sm text-gray-900 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded"
+                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.totalBrakeTime || 0}
@@ -140,13 +140,13 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       <div className="flex space-x-2">
                         <button
                           onClick={handleSave}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300"
                         >
                           Spara
                         </button>
                         <button
                           onClick={handleCancel}
-                          className="text-gray-600 hover:text-gray-900"
+                          className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-300"
                         >
                           Avbryt
                         </button>
@@ -154,7 +154,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                     ) : (
                       <button
                         onClick={() => handleDeleteRow(row.id)}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                         aria-label="Delete row"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
