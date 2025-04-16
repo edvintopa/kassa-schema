@@ -9,6 +9,7 @@ function Live() {
   const [schedule, setSchedule] = useState<ScheduleRow[] | null>(null);
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [testMode, setTestMode] = useState<boolean>(false);
+  const [showControls, setShowControls] = useState<boolean>(false);
   const location = useLocation();
 
   // Load schedule data from URL
@@ -36,6 +37,19 @@ function Live() {
     
     return () => clearInterval(timer);
   }, [testMode]);
+
+  // Add keyboard shortcut to toggle controls visibility
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Toggle controls when 'T' key is pressed
+      if (e.key === 't' || e.key === 'T') {
+        setShowControls(prev => !prev);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   if (!schedule) {
     return (
@@ -73,13 +87,15 @@ function Live() {
         </div>
       </div>
       
-      {/* Time Controls */}
-      <TimeControls
-        currentTime={currentTime}
-        setCurrentTime={setCurrentTime}
-        testMode={testMode}
-        setTestMode={setTestMode}
-      />
+      {/* Time Controls - hidden by default, toggle with 'T' key */}
+      <div className={`${showControls ? 'block' : 'hidden'}`}>
+        <TimeControls
+          currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
+          testMode={testMode}
+          setTestMode={setTestMode}
+        />
+      </div>
     </div>
   );
 }
