@@ -69,6 +69,14 @@ function Print() {
 
   return (
     <div className={styles.printContainer}>
+      {/* Print button - only visible on screen */}
+      <button 
+        onClick={() => window.print()} 
+        className={styles.printButton}
+      >
+        Skriv ut nu
+      </button>
+      
       <h1 className={styles.printTitle}>Dagens Schema</h1>
       
       {/* Staff Schedule Table */}
@@ -137,14 +145,6 @@ function Print() {
           </div>
         </div>
       </div>
-      
-      {/* Print button - only visible on screen */}
-      <button 
-        onClick={() => window.print()} 
-        className={styles.printButton}
-      >
-        Skriv ut nu
-      </button>
     </div>
   );
 }
