@@ -47,7 +47,7 @@ function Live() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {schedule.map((person: ScheduleRow, index) => (
+        {schedule.map((person: ScheduleRow) => (
           <div key={person.id} className="bg-white p-4 rounded shadow-md">
             <h2 className="text-xl font-bold mb-2">{person.name}</h2>
             <p className="mb-3">
@@ -60,7 +60,7 @@ function Live() {
               <div>
                 <h3 className="text-lg font-semibold mb-1">Breaks:</h3>
                 <ul className="list-disc pl-5">
-                  {person.breaks.map((breakItem: Break, breakIndex) => (
+                  {person.breaks.map((breakItem: Break) => (
                     <li key={breakItem.id} className="mb-1">
                       {breakItem.breakStart} - {breakItem.breakEnd} 
                       {breakItem.duration && ` (${breakItem.duration} min)`}
