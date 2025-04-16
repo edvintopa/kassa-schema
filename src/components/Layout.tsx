@@ -17,6 +17,9 @@ function Layout() {
           <Outlet /> {/* Replace children with Outlet */}
         </div>
       </main>
+      <footer>
+        <p className="mb-5">© Edvin Topalovic 2025</p>
+      </footer>
     </div>
   )
 }
