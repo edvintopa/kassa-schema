@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import DaySchedule from "../../components/schedules/DaySchedule/DaySchedule";
 import BreakSchedule from "../../components/schedules/BreakSchedule/BreakSchedule";
-import { ScheduleRow } from "../../types";
 import { useBreakAssignment } from "../../hooks/useBreakAssignment";
+import { usePersistentSchedule } from "../../hooks/usePersistentSchedule";
 
 function Home() {
-  const [schedule, setSchedule] = useState<ScheduleRow[]>([]);
+  const { schedule, setSchedule } = usePersistentSchedule();
   const { hasBreaks } = useBreakAssignment(schedule);
 
   return (
@@ -27,7 +26,7 @@ function Home() {
         </motion.div>
         
         <AnimatePresence initial={false} mode="wait">
-          {hasBreaks ? (
+          {hasBreaks && (
             <motion.div
               key="break-schedule"
               className="flex-1 max-w-3xl"
@@ -44,7 +43,7 @@ function Home() {
             >
               <BreakSchedule schedule={schedule} />
             </motion.div>
-          ) : null}
+          )}
         </AnimatePresence>
       </div>
     </div>
