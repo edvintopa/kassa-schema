@@ -10,6 +10,7 @@ interface UseScheduleEditorProps {
 export function useScheduleEditor({ schedule, setSchedule }: UseScheduleEditorProps) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editData, setEditData] = useState<ScheduleRow | null>(null);
+  const [isNew, setIsNew] = useState(false);
 
   const handleAddRow = () => {
     const newId = schedule.length ? Math.max(...schedule.map(row => row.id)) + 1 : 1;
@@ -21,9 +22,10 @@ export function useScheduleEditor({ schedule, setSchedule }: UseScheduleEditorPr
       totalBrakeTime: 0
     };
     setSchedule([...schedule, newRow]);
-    // Start editing the new row immediately
+    // Start editing the new row immediately and mark as new
     setEditingId(newId);
     setEditData(newRow);
+    setIsNew(true);
   };
 
   const handleDeleteRow = (id: number) => {
@@ -31,17 +33,18 @@ export function useScheduleEditor({ schedule, setSchedule }: UseScheduleEditorPr
     if (editingId === id) {
       setEditingId(null);
       setEditData(null);
+      setIsNew(false);
     }
   };
 
   const handleEditStart = (row: ScheduleRow) => {
     setEditingId(row.id);
     setEditData({ ...row });
+    setIsNew(false);
   };
 
   const handleInputChange = (field: keyof ScheduleRow, value: string | number) => {
     if (!editData) return;
-    
     const updatedData = { ...editData, [field]: value };
     setEditData(updatedData);
   };
@@ -80,11 +83,26 @@ export function useScheduleEditor({ schedule, setSchedule }: UseScheduleEditorPr
     setSchedule(schedule.map((row) => (row.id === updatedRow.id ? updatedRow : row)));
     setEditingId(null);
     setEditData(null);
+    setIsNew(false);
   };
 
   const handleCancel = () => {
+    // Remove the new row if it was added and then canceled
+    if (isNew && editingId !== null) {
+      setSchedule(schedule.filter(row => row.id !== editingId));
+    }
     setEditingId(null);
     setEditData(null);
+    setIsNew(false);
+  };
+
+  // New: Handle key down events (Enter to save, Escape to cancel)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    } else if (e.key === 'Escape') {
+      handleCancel();
+    }
   };
 
   return {
@@ -95,6 +113,7 @@ export function useScheduleEditor({ schedule, setSchedule }: UseScheduleEditorPr
     handleEditStart,
     handleInputChange,
     handleSave,
-    handleCancel
+    handleCancel,
+    handleKeyDown
   };
 }

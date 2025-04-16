@@ -16,7 +16,8 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
     handleEditStart,
     handleInputChange,
     handleSave,
-    handleCancel
+    handleCancel,
+    handleKeyDown
   } = useScheduleEditor({ schedule, setSchedule });
 
   // Ref for the name input field
@@ -45,12 +46,6 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
     document.addEventListener('keydown', handleGlobalKeyDown);
     return () => document.removeEventListener('keydown', handleGlobalKeyDown);
   }, [editingId, handleAddRow]);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSave();
-    }
-  };
 
   return (
     <div className="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700">
@@ -163,6 +158,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                         type="number"
                         value={editData?.totalBrakeTime || 0}
                         onChange={(e) => handleInputChange('totalBrakeTime', parseInt(e.target.value) || 0)}
+                        onKeyDown={handleKeyDown}
                         className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       />
                     ) : (
