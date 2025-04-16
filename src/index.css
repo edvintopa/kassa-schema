@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --container-4xl: 100%;  /* This mf, I don't know why but it was messing with the width of my page*/
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

@@ -20,133 +20,133 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
   } = useScheduleEditor({ schedule, setSchedule });
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700">
-      <div className="flex justify-between items-center p-4 border-b dark:border-neutral-700">
-        <h2 className="text-xl font-semibold text-neutral-800 dark:text-neutral-100">Schema</h2>
+    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm dark:shadow-neutral-700 border border-neutral-200 dark:border-neutral-700">
+      <div className="flex justify-between items-center p-5 border-b dark:border-neutral-700">
+        <h2 className="text-lg font-medium text-neutral-800 dark:text-neutral-100">Schema</h2>
         <button 
           onClick={handleAddRow}
-          className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 text-blue-600 dark:text-blue-400"
+          className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-700 text-blue-500 dark:text-blue-400 transition-colors"
           aria-label="Add row"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
         </button>
       </div>
       
       <div className="overflow-x-auto">
-        <table className="w-full table-fixed divide-y divide-neutral-200 dark:divide-neutral-700">
-          <thead className="bg-neutral-50 dark:bg-neutral-700">
-            <tr>
-              <th scope="col" className="w-1/4 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+        <table className="w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+          <thead>
+            <tr className="bg-neutral-50 dark:bg-neutral-750">
+              <th scope="col" className="w-1/4 px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                 Namn
               </th>
-              <th scope="col" className="w-1/6 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                 Start
               </th>
-              <th scope="col" className="w-1/6 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                 Stop
               </th>
-              <th scope="col" className="w-1/6 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                 Rast
               </th>
-              <th scope="col" className="w-1/6 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-5 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                 Åtgärder
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700">
+          <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
             {schedule.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center text-sm text-neutral-500 dark:text-neutral-400">
-                  Inget schema än. Tryck på + för att fortsätta...
+                <td colSpan={5} className="px-5 py-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
+                  Inget schema än. Klicka på + för att lägga till...
                 </td>
               </tr>
             ) : (
               schedule.map((row) => (
-                <tr key={row.id} className="dark:hover:bg-neutral-750">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <tr key={row.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-750 transition-colors">
+                  <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
                         type="text"
                         value={editData?.name || ''}
                         onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="border dark:border-neutral-600 rounded px-2 py-1 w-full dark:bg-neutral-700 dark:text-neutral-100"
+                        className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       />
                     ) : (
                       <div 
-                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded min-h-[28px]"
+                        className="text-sm text-neutral-800 dark:text-neutral-200 py-1.5 min-h-[34px] flex items-center"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.name || '—'}
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
                         type="text"
                         value={editData?.shiftStart || ''}
                         onChange={(e) => handleInputChange('shiftStart', e.target.value)}
-                        className="border dark:border-neutral-600 rounded px-2 py-1 w-full dark:bg-neutral-700 dark:text-neutral-100"
+                        className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                         placeholder="HH:MM"
                       />
                     ) : (
                       <div 
-                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded min-h-[28px]"
+                        className="text-sm text-neutral-800 dark:text-neutral-200 py-1.5 min-h-[34px] flex items-center"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.shiftStart || '—'}
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
                         type="text"
                         value={editData?.shiftEnd || ''}
                         onChange={(e) => handleInputChange('shiftEnd', e.target.value)}
-                        className="border dark:border-neutral-600 rounded px-2 py-1 w-full dark:bg-neutral-700 dark:text-neutral-100"
+                        className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                         placeholder="HH:MM"
                       />
                     ) : (
                       <div 
-                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded min-h-[28px]"
+                        className="text-sm text-neutral-800 dark:text-neutral-200 py-1.5 min-h-[34px] flex items-center"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.shiftEnd || '—'}
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
                         type="number"
                         value={editData?.totalBrakeTime || 0}
                         onChange={(e) => handleInputChange('totalBrakeTime', parseInt(e.target.value) || 0)}
-                        className="border dark:border-neutral-600 rounded px-2 py-1 w-full dark:bg-neutral-700 dark:text-neutral-100"
+                        className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       />
                     ) : (
                       <div 
-                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded min-h-[28px]"
+                        className="text-sm text-neutral-800 dark:text-neutral-200 py-1.5 min-h-[34px] flex items-center"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.totalBrakeTime || 0}
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-5 py-4 text-right">
                     {editingId === row.id ? (
-                      <div className="flex space-x-2 justify-end">
+                      <div className="flex space-x-3 justify-end">
                         <button
                           onClick={handleSave}
-                          className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300"
+                          className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                         >
                           Spara
                         </button>
                         <button
                           onClick={handleCancel}
-                          className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-300"
+                          className="px-3 py-1.5 bg-neutral-50 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400 text-sm rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-650 transition-colors"
                         >
                           Avbryt
                         </button>
@@ -154,7 +154,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                     ) : (
                       <button
                         onClick={() => handleDeleteRow(row.id)}
-                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                        className="p-1.5 text-neutral-500 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 rounded-md transition-colors"
                         aria-label="Delete row"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
