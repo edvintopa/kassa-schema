@@ -1,4 +1,3 @@
-import React from 'react'
 import { useLocation, Outlet } from 'react-router-dom'
 import Header from './header/Header'
 import '../App.css'
