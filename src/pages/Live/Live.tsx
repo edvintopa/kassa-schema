@@ -32,7 +32,7 @@ function Live() {
     
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000); // Update every minute
+    }, 1000); // Update every minute
     
     return () => clearInterval(timer);
   }, [testMode]);

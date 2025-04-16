@@ -39,7 +39,7 @@ function LiveSchedule<T extends { id: string | number }>({
     
     const timer = setInterval(() => {
       setInternalTime(new Date());
-    }, 60000);
+    }, 1000);
     
     return () => clearInterval(timer);
   }, [externalTime]);
@@ -251,8 +251,8 @@ function LiveSchedule<T extends { id: string | number }>({
                   transition={{
                     layout: { 
                       type: "spring", 
-                      stiffness: 200, 
-                      damping: 25 
+                      stiffness: 300, 
+                      damping: 70 
                     }
                   }}
                 >
