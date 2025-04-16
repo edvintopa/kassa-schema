@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { ScheduleRow, Break } from "../../types";
+import { ScheduleRow } from "../../types";
 import LiveDaySchedule from "../../components/liveView/LiveDaySchedule/LiveDaySchedule";
+import LiveBreakSchedule from "../../components/liveView/LiveBreakSchedule/LiveBreakSchedule";
 
 function Live() {
   const [schedule, setSchedule] = useState<ScheduleRow[] | null>(null);
-  const [debug, setDebug] = useState<string>("");
   const location = useLocation();
 
   useEffect(() => {
@@ -16,10 +16,6 @@ function Live() {
       try {
         const decodedSchedule = JSON.parse(decodeURIComponent(scheduleParam));
         setSchedule(decodedSchedule);
-        // Save first item for debugging
-        if (decodedSchedule && decodedSchedule.length > 0) {
-          setDebug(JSON.stringify(decodedSchedule[0], null, 2));
-        }
       } catch (error) {
         console.error('Failed to parse schedule data:', error);
       }
@@ -46,9 +42,9 @@ function Live() {
           <LiveDaySchedule schedule={schedule} />
         </div>
         
-        {/* Right column - Empty for now */}
-        <div className="w-full md:w-1/2 bg-white dark:bg-neutral-800 rounded-lg shadow-lg h-auto min-h-[400px]">
-          {/* Content for right table will be added later */}
+        {/* Right column - Break schedule */}
+        <div className="w-full md:w-1/2">
+          <LiveBreakSchedule schedule={schedule} />
         </div>
       </div>
     </div>
