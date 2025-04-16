@@ -12,15 +12,11 @@ function App() {
         {/* Print route outside of Layout */}
         <Route path="/print" element={<Print />} />
         
-        {/* All other routes with Layout */}
-        <Route path="/" element={
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/live" element={<Live />} />
-            </Routes>
-          </Layout>
-        } />
+        {/* Use the element prop for the layout and nested routes */}
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/live" element={<Live />} />
+        </Route>
       </Routes>
     </Router>
   )

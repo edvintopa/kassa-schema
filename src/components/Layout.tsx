@@ -1,13 +1,10 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, Outlet } from 'react-router-dom'
 import Header from './header/Header'
 import '../App.css'
 
-interface LayoutProps {
-  children: React.ReactNode
-}
-
-function Layout({ children }: LayoutProps) {
+// Remove the LayoutProps interface - no longer needed
+function Layout() {
   const location = useLocation()
   
   return (
@@ -18,7 +15,7 @@ function Layout({ children }: LayoutProps) {
           key={location.pathname} 
           className="w-full max-w-4xl pt-4 pb-0 animate-fadeIn"
         >
-          {children}
+          <Outlet /> {/* Replace children with Outlet */}
         </div>
       </main>
     </div>
