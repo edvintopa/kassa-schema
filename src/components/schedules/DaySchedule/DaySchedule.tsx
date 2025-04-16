@@ -17,38 +17,76 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
     handleInputChange,
     handleSave,
     handleCancel,
-    handleKeyDown
+    handleKeyDown,
+    selectedRowIndex,
+    selectedColumnIndex,
+    clearSelection
   } = useScheduleEditor({ schedule, setSchedule });
 
-  // Ref for the name input field
+  // Create refs for each field  
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const shiftStartRef = useRef<HTMLInputElement>(null);
+  const shiftEndRef = useRef<HTMLInputElement>(null);
+  const breakInputRef = useRef<HTMLInputElement>(null);
 
-  // Focus the name field when a new row is opened for editing
+  // Focus the correct input field when editing and selectedColumnIndex changes.
   useEffect(() => {
-    if (editingId && nameInputRef.current) {
-      nameInputRef.current.focus();
+    if (editingId !== null && selectedColumnIndex !== null) {
+      switch (selectedColumnIndex) {
+        case 0:
+          nameInputRef.current?.focus();
+          break;
+        case 1:
+          shiftStartRef.current?.focus();
+          break;
+        case 2:
+          shiftEndRef.current?.focus();
+          break;
+        case 3:
+          breakInputRef.current?.focus();
+          break;
+        default:
+          break;
+      }
     }
-  }, [editingId]);
+  }, [editingId, selectedColumnIndex]);
 
-  // Listen for global Enter key when nothing is selected and no input is focused
+  // Global listener to handle Enter key when no input is focused.
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // When in edit mode, do nothing so Enter isn't interpreted as "add new row"
+      if (editingId) return;
+  
       if (
         e.key === 'Enter' &&
-        !editingId &&
         document.activeElement?.tagName !== 'INPUT'
       ) {
         e.preventDefault();
-        handleAddRow();
+        if (selectedRowIndex !== null) {
+          handleKeyDown(e as unknown as React.KeyboardEvent<HTMLInputElement>);
+        } else {
+          handleAddRow();
+        }
       }
     };
-
     document.addEventListener('keydown', handleGlobalKeyDown);
     return () => document.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [editingId, handleAddRow]);
+  }, [editingId, handleAddRow, selectedRowIndex, handleKeyDown]);
+
+  // Global listener to intercept arrow keys and prevent page scroll.
+  useEffect(() => {
+    const handleGlobalArrowKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        handleKeyDown(e as unknown as React.KeyboardEvent<HTMLInputElement>);
+      }
+    };
+    document.addEventListener('keydown', handleGlobalArrowKeyDown);
+    return () => document.removeEventListener('keydown', handleGlobalArrowKeyDown);
+  }, [editingId, handleKeyDown]);
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700">
+    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700" onClick={clearSelection}>
       <div className="flex justify-between items-center p-4 border-b dark:border-neutral-700">
         <h2 className="text-xl font-semibold text-neutral-800 dark:text-neutral-100">
           Schema
@@ -68,33 +106,27 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
         <table className="w-full divide-y divide-neutral-200 dark:divide-neutral-600">
           <thead>
             <tr className="bg-neutral-100 dark:bg-neutral-800">
-              <th scope="col" className="w-1/4 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
-                Namn
-              </th>
-              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
-                Start
-              </th>
-              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
-                Stop
-              </th>
-              <th scope="col" className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
-                Rast
-              </th>
-              <th scope="col" className="w-1/6 px-5 py-3 text-right text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
-                Åtgärder
-              </th>
+              <th className="w-1/4 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">Namn</th>
+              <th className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">Start</th>
+              <th className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">Stop</th>
+              <th className="w-1/6 px-5 py-3 text-left text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">Rast</th>
+              <th className="w-1/6 px-5 py-3 text-right text-xs font-medium text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">Åtgärder</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-200 dark:divide-neutral-600">
             {schedule.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-5 py-8 text-center text-sm text-neutral-600 dark:text-neutral-300">
-                  Inget schema än. Klicka på + eller tryck <span className='font-bold'>ENTER</span> för att fortsätta...
+                  Inget schema än. Klicka på + eller tryck <span className="font-bold">ENTER</span> för att fortsätta...
                 </td>
               </tr>
             ) : (
-              schedule.map((row) => (
-                <tr key={row.id} className="hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors">
+              schedule.map((row, index) => (
+                <tr key={row.id} 
+                    className={`hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors 
+                      ${!editingId && selectedRowIndex === index ? 'bg-blue-100 dark:bg-blue-900' : ''}`}
+                >
+                  {/* Name Column */}
                   <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
@@ -103,7 +135,9 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                         value={editData?.name || ''}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        className={`border rounded px-3 py-1.5 w-full focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none
+                          ${editingId && selectedColumnIndex === 0 ? 'border-blue-500' : 'border-neutral-300 dark:border-neutral-600'} 
+                          dark:bg-neutral-700 dark:text-neutral-100`}
                       />
                     ) : (
                       <div 
@@ -114,15 +148,19 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       </div>
                     )}
                   </td>
+                  {/* Start Column */}
                   <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
+                        ref={shiftStartRef}
                         type="text"
                         value={editData?.shiftStart || ''}
                         onChange={(e) => handleInputChange('shiftStart', e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                         placeholder="HH:MM"
+                        className={`border rounded px-3 py-1.5 w-full focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none
+                          ${editingId && selectedColumnIndex === 1 ? 'border-blue-500' : 'border-neutral-300 dark:border-neutral-600'} 
+                          dark:bg-neutral-700 dark:text-neutral-100`}
                       />
                     ) : (
                       <div 
@@ -133,15 +171,19 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       </div>
                     )}
                   </td>
+                  {/* Stop Column */}
                   <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
+                        ref={shiftEndRef}
                         type="text"
                         value={editData?.shiftEnd || ''}
                         onChange={(e) => handleInputChange('shiftEnd', e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
                         placeholder="HH:MM"
+                        className={`border rounded px-3 py-1.5 w-full focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none
+                          ${editingId && selectedColumnIndex === 2 ? 'border-blue-500' : 'border-neutral-300 dark:border-neutral-600'} 
+                          dark:bg-neutral-700 dark:text-neutral-100`}
                       />
                     ) : (
                       <div 
@@ -152,14 +194,18 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       </div>
                     )}
                   </td>
+                  {/* Break Column */}
                   <td className="px-5 py-4">
                     {editingId === row.id ? (
                       <input
+                        ref={breakInputRef}
                         type="number"
                         value={editData?.totalBrakeTime || 0}
                         onChange={(e) => handleInputChange('totalBrakeTime', parseInt(e.target.value) || 0)}
                         onKeyDown={handleKeyDown}
-                        className="border border-neutral-300 dark:border-neutral-600 rounded px-3 py-1.5 w-full dark:bg-neutral-700 dark:text-neutral-100 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        className={`border rounded px-3 py-1.5 w-full focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none
+                          ${editingId && selectedColumnIndex === 3 ? 'border-blue-500' : 'border-neutral-300 dark:border-neutral-600'} 
+                          dark:bg-neutral-700 dark:text-neutral-100`}
                       />
                     ) : (
                       <div 
@@ -170,6 +216,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       </div>
                     )}
                   </td>
+                  {/* Actions Column */}
                   <td className="px-5 py-4 text-right">
                     {editingId === row.id ? (
                       <div className="flex space-x-3 justify-end">
