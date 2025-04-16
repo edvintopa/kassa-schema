@@ -35,22 +35,22 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
       </div>
       
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+        <table className="w-full table-fixed divide-y divide-neutral-200 dark:divide-neutral-700">
           <thead className="bg-neutral-50 dark:bg-neutral-700">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/4 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Namn
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Start
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Stop
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Rast
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+              <th scope="col" className="w-1/6 px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                 Åtgärder
               </th>
             </tr>
@@ -75,7 +75,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       />
                     ) : (
                       <div 
-                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded"
+                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded min-h-[28px]"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.name || '—'}
@@ -93,7 +93,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       />
                     ) : (
                       <div 
-                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded"
+                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded min-h-[28px]"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.shiftStart || '—'}
@@ -111,7 +111,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       />
                     ) : (
                       <div 
-                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded"
+                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded min-h-[28px]"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.shiftEnd || '—'}
@@ -128,7 +128,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                       />
                     ) : (
                       <div 
-                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded"
+                        className="text-sm text-neutral-900 dark:text-neutral-100 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 px-2 py-1 rounded min-h-[28px]"
                         onClick={() => handleEditStart(row)}
                       >
                         {row.totalBrakeTime || 0}
@@ -137,7 +137,7 @@ const DaySchedule: React.FC<DayScheduleProps> = ({ schedule, setSchedule }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     {editingId === row.id ? (
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 justify-end">
                         <button
                           onClick={handleSave}
                           className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300"

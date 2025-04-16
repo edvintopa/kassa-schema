@@ -15,7 +15,7 @@ const BreakSchedule: React.FC<BreakScheduleProps> = ({ schedule }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700 mt-8">
+    <div className="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700">
       <div className="p-4 border-b dark:border-neutral-700">
         <h2 className="text-xl font-semibold text-neutral-800 dark:text-neutral-100">Rast schema</h2>
       </div>
