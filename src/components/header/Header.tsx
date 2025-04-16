@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Header: React.FC = () => {
   return (
-    <header className="w-full bg-rose-600 shadow-neutral-900 py-4 px-6 transition-colors duration-200">
+    <header className="w-full bg-sky-600 shadow-neutral-900 py-4 px-6 transition-colors duration-200">
       <div className="max-w-4xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
           {/* Logo/Brand */}
@@ -12,20 +12,9 @@ const Header: React.FC = () => {
           </Link>
         </div>
         
-        <nav>
-          <ul className="flex space-x-6">
-            <li>
-              <Link to="/" className="font-bold text-neutral-50">
-                Hem
-              </Link>
-            </li>
-            <li>
-              <Link to="/schedule" className="font-bold text-neutral-50">
-                Live
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <div className="flex space-x-6 text-neutral-50">
+            <p>© Edvin Topalovic 2025</p>
+        </div>
       </div>
     </header>
   )
