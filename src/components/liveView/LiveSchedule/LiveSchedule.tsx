@@ -98,7 +98,6 @@ function LiveSchedule<T extends { id: string | number }>({
   };
   
   // Track state changes for items
-    // Track state changes for items
   useEffect(() => {
     const newStates = new Map<string | number, string>();
     
@@ -183,14 +182,14 @@ function LiveSchedule<T extends { id: string | number }>({
     );
   }
 
-  // Create a grid template based on number of columns
-  const gridTemplateColumns = `grid-cols-${columns.length}`;
-
   return (
     <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg overflow-hidden text-start h-full flex flex-col">
       <div className="min-w-full flex flex-col flex-1">
         {/* Header row */}
-        <div className={`grid ${gridTemplateColumns} bg-gray-50 dark:bg-neutral-700 border-b border-gray-200 dark:border-neutral-700 sticky top-0 z-10`}>
+        <div 
+          className="grid bg-gray-50 dark:bg-neutral-700 border-b border-gray-200 dark:border-neutral-700 sticky top-0 z-10"
+          style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }}
+        >
           {columns.map((column, index) => (
             <div 
               key={index} 
@@ -225,10 +224,11 @@ function LiveSchedule<T extends { id: string | number }>({
               return (
                 <motion.div 
                   key={item.id.toString()} 
-                  className={`relative grid ${gridTemplateColumns} hover:bg-gray-50/30 dark:hover:bg-neutral-700/30 ${
+                  className={`relative grid hover:bg-gray-50/30 dark:hover:bg-neutral-700/30 ${
                     completed ? 'opacity-60' : ''
                   }`}
                   style={{
+                    gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`,
                     backgroundImage: `linear-gradient(to right, 
                       ${bgColor} ${progress}%, 
                       transparent ${progress}%)`
