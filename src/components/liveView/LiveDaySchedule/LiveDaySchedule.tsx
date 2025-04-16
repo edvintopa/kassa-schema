@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ScheduleRow } from '../../../types';
 
 interface LiveDayScheduleProps {
@@ -40,6 +40,43 @@ const LiveDaySchedule: React.FC<LiveDayScheduleProps> = ({ schedule }) => {
     return progress;
   };
 
+  // Check if a shift is completed
+  const isShiftCompleted = (shiftEnd: string): boolean => {
+    const [endHour, endMinute] = shiftEnd.split(':').map(Number);
+    const today = new Date();
+    const end = new Date(today.getFullYear(), today.getMonth(), today.getDate(), endHour, endMinute);
+    return currentTime > end;
+  };
+
+  // Sort schedule with active shifts at top, completed at bottom
+  const sortedSchedule = useMemo(() => {
+    // First separate active and completed shifts
+    const activeShifts: ScheduleRow[] = [];
+    const completedShifts: ScheduleRow[] = [];
+    
+    schedule.forEach(shift => {
+      if (isShiftCompleted(shift.shiftEnd)) {
+        completedShifts.push(shift);
+      } else {
+        activeShifts.push(shift);
+      }
+    });
+    
+    // Sort each group by start time
+    const sortByStartTime = (a: ScheduleRow, b: ScheduleRow) => {
+      const [aHour, aMinute] = a.shiftStart.split(':').map(Number);
+      const [bHour, bMinute] = b.shiftStart.split(':').map(Number);
+      
+      if (aHour !== bHour) {
+        return aHour - bHour;
+      }
+      return aMinute - bMinute;
+    };
+    
+    // Return active shifts first, then completed shifts
+    return [...activeShifts.sort(sortByStartTime), ...completedShifts.sort(sortByStartTime)];
+  }, [schedule, currentTime]); // Note: added currentTime dependency
+
   return (
     <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg overflow-hidden text-start">
       <div className="min-w-full">
@@ -55,16 +92,24 @@ const LiveDaySchedule: React.FC<LiveDayScheduleProps> = ({ schedule }) => {
         
         {/* Table body */}
         <div className="divide-y divide-gray-200 dark:divide-neutral-700">
-          {schedule.map((person: ScheduleRow) => {
+          {sortedSchedule.map((person: ScheduleRow) => {
             const progress = getShiftProgress(person.shiftStart, person.shiftEnd);
+            const completed = isShiftCompleted(person.shiftEnd);
             
             return (
               <div 
                 key={person.id} 
-                className="relative grid grid-cols-2 hover:bg-gray-50/30 dark:hover:bg-neutral-700/30"
+                className={`relative grid grid-cols-2 hover:bg-gray-50/30 dark:hover:bg-neutral-700/30 ${
+                  completed ? 'opacity-60' : ''
+                }`}
                 style={{
                   backgroundImage: `linear-gradient(to right, 
-                    ${progress > 0 ? 'rgba(72, 167, 218, 0.2)' : 'transparent'} ${progress}%, 
+                    ${progress > 0 
+                      ? completed 
+                        ? 'rgba(209, 213, 219, 0.3)' // Gray for completed
+                        : 'rgba(72, 167, 218, 0.2)'  // Blue for active
+                      : 'transparent'
+                    } ${progress}%, 
                     transparent ${progress}%)`
                 }}
               >
